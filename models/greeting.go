@@ -1,8 +1,7 @@
 package models
 
 type Greeting struct {
-	greetingId string `json:"greetingId`
-	displayNumber int `json:"displayNumber`
-	content string `json:"content`
+	GreetingId    string `json:"greetingId`
+	DisplayNumber int    `json:"displayNumber`
+	Content       string `json:"content`
 }
-

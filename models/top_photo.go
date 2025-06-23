@@ -1,6 +1,6 @@
-package database
+package models
 
 type TopPhoto struct {
-	topPhotoId string `json:"topPhotoId"`
-	topPhotoUrl string `json:"topPhotoUrl"`
+	TopPhotoId  string `json:"topPhotoId"`
+	TopPhotoUrl string `json:"topPhotoUrl"`
 }

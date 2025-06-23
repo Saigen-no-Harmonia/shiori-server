@@ -1,10 +1,12 @@
 package main
 
 import (
-	"shiori-server/database"
-	"shiori-server/controllers"
-	"github.com/joho/godotenv"
 	"log"
+	"shiori-server/controllers"
+	"shiori-server/database"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -20,7 +22,7 @@ func main() {
 	r := gin.Default()
 
 	// ルーティング
-	r.GET("/", controllers.getTopInformation)
+	r.GET("/", controllers.GetTopPage)
 
 	// サーバ起動
 	r.RUN(":8080") //localhost:8080
