@@ -1,8 +1,8 @@
 package models
 
 type GalleryPhoto struct {
-	galleryPhotoId  string `json:"galleryPhotoId"`
-	galleryPhotoUrl string `json:"galleryPhotoUrl"`
+	GalleryPhotoId  string `json:"galleryPhotoId"`
+	GalleryPhotoUrl string `json:"galleryPhotoUrl"`
 }
 
 func NewGalleryPhoto(
@@ -10,8 +10,8 @@ func NewGalleryPhoto(
 	galleryPhotoUrl string,
 ) *GalleryPhoto {
 	p := new(GalleryPhoto)
-	p.galleryPhotoId = galleryPhotoId
-	p.galleryPhotoUrl = galleryPhotoUrl
+	p.GalleryPhotoId = galleryPhotoId
+	p.GalleryPhotoUrl = galleryPhotoUrl
 
 	return p
 }
