@@ -8,7 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var DB sql.DB
+var DB *sql.DB
 
 //DBの初期化処理
 

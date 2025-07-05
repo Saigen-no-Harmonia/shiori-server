@@ -23,6 +23,10 @@ func main() {
 
 	// ルーティング
 	r.GET("/", controllers.GetTopPage)
+	r.GET("/profile", controllers.GetProfiles)
+	// r.GET("/access", GetAccess)
+	r.GET("/gallery", controllers.GetGallaryPhotos)
+	// r.GET("/about", controllers.GetAbout)
 
 	// サーバ起動
 	r.RUN(":8080") //localhost:8080

@@ -1,56 +1,78 @@
 package controllers
 
 import (
+	"database/sql"
 	"net/http"
 	"shiori-server/database"
-	"shiori-server/models"
 	"shiori-server/models/dto"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetTopPage(c *gin.Context) {
-	// トップ画像をDBから取得
-	photoRow, err := database.DB.Query(
-		"SELECT * FROM M_TOP_PHOTO",
+	var topPageResponse dto.TopPageResponse
+
+	/** トップ画像をDBから取得（レコードは一件のみ） */
+	photoRow := database.DB.QueryRow(
+		"SELECT * " +
+			"FROM M_TOP_PHOTO" +
+			"WHERE delete_flag = 0" +
+			"ORDER BY top_photo_id ASC" +
+			"LIMIT ONE",
 	)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "トップ画像情報へのDBアクセスに失敗しました"})
+
+	/** 取得結果をDTOにマッピング */
+	if photoErr := photoRow.Scan(
+		&topPageResponse.TopPhoto.TopPhotoId,  // トップ画像ID
+		&topPageResponse.TopPhoto.TopPhotoUrl, // トップ画像URL
+	); photoErr != nil {
+		/** 取得件数が０件の場合のエラー*/
+		if photoErr == sql.ErrNoRows {
+			c.JSON(
+				http.StatusNotFound,
+				gin.H{"error": photoErr.Error()},
+			)
+			return
+		}
+		//** その他のエラーの場合 */
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{"error": photoErr.Error()},
+		)
 		return
 	}
 
-	// トップ画像テーブルをクローズ
-	defer photoRow.Close()
-
-	// 取得データを格納
-	var p models.TopPhoto
-	if err := photoRow.Scan(&p.TopPhotoId, &p.TopPhotoUrl); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "トップ画像データの格納に失敗しました"})
-		return
-	}
-
-	// 挨拶文をDBから取得
-	greetingRow, err := database.DB.Query(
-		"SELECT * FROM M_GREETING",
+	// 挨拶文をDBから取得（レコードは一件のみ）
+	greetingRow := database.DB.QueryRow(
+		"SELECT *" +
+			"FROM M_GREETING" +
+			"WHERE delete_flag = 0" +
+			"ORDER BY greeting_id ASC" +
+			"LIMIT ONE",
 	)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "挨拶文へのDBアクセスに失敗しました"})
-		return
-	}
-	// 挨拶文テーブルをクローズ
-	defer greetingRow.Close()
+	// 挨拶文テーブルをクローズ?
 
-	var g models.Greeting
-	if err := greetingRow.Scan(&g.GreetingId, &g.DisplayNumber, &g.Content); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "挨拶文データの格納に失敗しました"})
-		return
+	/** 取得結果をDTOにマッピング*/
+	if greetingErr := greetingRow.Scan(
+		&topPageResponse.Greeting.GreetingId,    // 挨拶文ID
+		&topPageResponse.Greeting.DisplayNumber, // 表示順（１のみ）
+		&topPageResponse.Greeting.Content,       // 挨拶文
+	); greetingErr != nil {
+		/** 取得結果が0件の場合のエラー */
+		if greetingErr == sql.ErrNoRows {
+			c.JSON(
+				http.StatusNotFound,
+				gin.H{"error": greetingErr.Error()},
+			)
+		}
+
+		/** その他の場合のエラー */
+		c.JSON(
+			http.StatusInternalServerError,
+			gin.H{"error": greetingErr.Error()},
+		)
 	}
 
 	// DTOにつめて返却
-	response := dto.TopPageResponse{
-		TopPhoto: p,
-		Greeting: g,
-	}
-
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, topPageResponse)
 }

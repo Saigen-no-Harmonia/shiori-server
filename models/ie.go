@@ -1,6 +1,17 @@
 package models
 
 type Ie struct {
-	ieId string `json:"ieId"`
-	ieName string `json:"ieName"`
+	IeId   string `json:"ieId"`
+	IeName string `json:"ieName"`
+}
+
+func NewIe(
+	ieId string,
+	ieName string,
+) *Ie {
+	i := new(Ie)
+	i.IeId = ieId
+	i.IeName = ieName
+
+	return i
 }
