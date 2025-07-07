@@ -3,10 +3,10 @@ package dto
 import "shiori-server/models"
 
 type GalleryPhotoPageResponse struct {
-	GalleryPhotos []models.GalleryPhoto `json:"GalleryPhotos"`
+	GalleryPhotos []models.GalleryPhoto `json:"galleryPhotos"`
 }
 
-func NewGalleryPhotos(
+func NewGalleryPhotoPageresponse(
 	galleryPhotos []models.GalleryPhoto,
 ) *GalleryPhotoPageResponse {
 	r := new(GalleryPhotoPageResponse)

@@ -3,9 +3,9 @@ package dto
 import "shiori-server/models"
 
 type ProfilePageResponse struct {
-	PresenterProfiles   []models.PresenterProfile   `json:"PresenterProfiles"`
-	ParticipantProfiles []models.ParticipantProfile `json:"ParticipantProfiles"`
-	NekoProfiles        []models.Neko               `json:"NekoProfiles"`
+	PresenterProfiles   []models.PresenterProfile   `json:"presenterProfiles"`
+	ParticipantProfiles []models.ParticipantProfile `json:"participantProfiles"`
+	NekoProfiles        []models.Neko               `json:"nekoProfiles"`
 }
 
 func NewProfilePageResponse(

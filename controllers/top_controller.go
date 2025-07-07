@@ -4,14 +4,13 @@ import (
 	"database/sql"
 	"net/http"
 	"shiori-server/database"
+	"shiori-server/models"
 	"shiori-server/models/dto"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetTopPage(c *gin.Context) {
-	var topPageResponse dto.TopPageResponse
-
 	/** トップ画像をDBから取得（レコードは一件のみ） */
 	photoRow := database.DB.QueryRow(
 		"SELECT * " +
@@ -22,9 +21,10 @@ func GetTopPage(c *gin.Context) {
 	)
 
 	/** 取得結果をDTOにマッピング */
+	var topPhoto models.TopPhoto
 	if photoErr := photoRow.Scan(
-		&topPageResponse.TopPhoto.TopPhotoId,  // トップ画像ID
-		&topPageResponse.TopPhoto.TopPhotoUrl, // トップ画像URL
+		&topPhoto.TopPhotoId,  // トップ画像ID
+		&topPhoto.TopPhotoUrl, // トップ画像URL
 	); photoErr != nil {
 		/** 取得件数が０件の場合のエラー*/
 		if photoErr == sql.ErrNoRows {
@@ -43,36 +43,47 @@ func GetTopPage(c *gin.Context) {
 	}
 
 	// 挨拶文をDBから取得（レコードは一件のみ）
-	greetingRow := database.DB.QueryRow(
+	greetingRows, greetingErr := database.DB.Query(
 		"SELECT *" +
 			"FROM M_GREETING" +
 			"WHERE delete_flag = 0" +
-			"ORDER BY greeting_id ASC" +
-			"LIMIT ONE",
+			"ORDER BY greeting_id ASC",
 	)
-	// 挨拶文テーブルをクローズ?
-
-	/** 取得結果をDTOにマッピング*/
-	if greetingErr := greetingRow.Scan(
-		&topPageResponse.Greeting.GreetingId,    // 挨拶文ID
-		&topPageResponse.Greeting.DisplayNumber, // 表示順（１のみ）
-		&topPageResponse.Greeting.Content,       // 挨拶文
-	); greetingErr != nil {
-		/** 取得結果が0件の場合のエラー */
+	if greetingErr != nil {
+		/** データ取得できなかった場合のエラー */
 		if greetingErr == sql.ErrNoRows {
 			c.JSON(
 				http.StatusNotFound,
 				gin.H{"error": greetingErr.Error()},
 			)
+			return
 		}
-
-		/** その他の場合のエラー */
 		c.JSON(
 			http.StatusInternalServerError,
 			gin.H{"error": greetingErr.Error()},
 		)
 	}
+	defer greetingRows.Close()
+	// 挨拶文テーブルをクローズ?
+
+	var greetings []models.Greeting
+	/** 取得結果を、要素の数だけ、DTOにマッピング*/
+	for greetingRows.Next() {
+		var greeting models.Greeting
+		if err := greetingRows.Scan(
+			&greeting.GreetingId,    // 挨拶ID
+			&greeting.DisplayNumber, // 表示順
+			&greeting.Content,       //挨拶文
+		); err != nil {
+			c.JSON(http.StatusInternalServerError,
+				gin.H{"error": err.Error()})
+		}
+
+		/** 配列に格納 */
+		greetings = append(greetings, greeting)
+	}
 
 	// DTOにつめて返却
+	topPageResponse := dto.NewTopPageResponse(topPhoto, greetings)
 	c.JSON(http.StatusOK, topPageResponse)
 }
