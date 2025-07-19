@@ -1,17 +1,17 @@
 package models
 
 type TopPhoto struct {
-	TopPhotoId  string `json:"topPhotoId"`
-	TopPhotoUrl string `json:"topPhotoUrl"`
+	Id           string `json:"id"`
+	S3ObjectName string `json:"s3ObjectName"`
 }
 
 func NewTopPhoto(
-	topPhotoId string,
-	topPhotoUrl string,
+	id string,
+	s3ObjectName string,
 ) *TopPhoto {
 	p := new(TopPhoto)
-	p.TopPhotoId = topPhotoId
-	p.TopPhotoUrl = topPhotoUrl
+	p.Id = id
+	p.S3ObjectName = s3ObjectName
 
 	return p
 }

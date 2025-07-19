@@ -1,10 +1,6 @@
 package controllers
 
 import (
-	// "net/http"
-	// "shiori-server/database"
-	// "shiori-server/models"
-
 	"net/http"
 	"shiori-server/database"
 	"shiori-server/models"
@@ -46,12 +42,13 @@ func GetGalleryPhotos(c *gin.Context) {
 	}
 	defer rows.Close()
 
+	// 取得したデータをモデルに格納
 	var galleryPhotos []models.GalleryPhoto
 	for rows.Next() {
 		var p models.GalleryPhoto
 		if err := rows.Scan(
-			&p.GalleryPhotoId,
-			&p.GalleryPhotoUrl,
+			&p.Id,
+			&p.S3ObjectName,
 		); err != nil {
 			c.JSON(
 				http.StatusInternalServerError,

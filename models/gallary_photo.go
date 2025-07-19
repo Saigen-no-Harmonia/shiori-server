@@ -1,17 +1,20 @@
 package models
 
 type GalleryPhoto struct {
-	GalleryPhotoId  string `json:"galleryPhotoId"`
-	GalleryPhotoUrl string `json:"galleryPhotoUrl"`
+	Id           string `json:"id"`
+	S3ObjectName string `json:"s3ObjectName"`
+	PhotoUrl     string `json:"photoUrl"`
 }
 
 func NewGalleryPhoto(
-	galleryPhotoId string,
-	galleryPhotoUrl string,
+	id string,
+	s3ObjectName string,
+	photoUrl string,
 ) *GalleryPhoto {
 	p := new(GalleryPhoto)
-	p.GalleryPhotoId = galleryPhotoId
-	p.GalleryPhotoUrl = galleryPhotoUrl
+	p.Id = id
+	p.S3ObjectName = s3ObjectName
+	p.PhotoUrl = photoUrl
 
 	return p
 }

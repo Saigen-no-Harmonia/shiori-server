@@ -16,7 +16,7 @@ func GetProfiles(c *gin.Context) {
 		"SELECT *" +
 			"FROM M_PRESENTER_PROFILE p" +
 			"INNER JOIN M_IE i" +
-			"ON p.ie_id = i.ie_id",
+			"ON p.ie_id = i.id",
 	)
 	if presenterErr != nil {
 		/** データ取得に失敗した場合のエラー */
@@ -41,7 +41,7 @@ func GetProfiles(c *gin.Context) {
 		"SELECT *" +
 			"FROM M_PARTICIPANT_PROFIILE p" +
 			"INNER JOIN M_IE i" +
-			"ON p.ie_id = i.ie_id" +
+			"ON p.ie_id = i.id" +
 			"ORDER BY display_number",
 	)
 	if participantErr != nil {
@@ -57,7 +57,7 @@ func GetProfiles(c *gin.Context) {
 		"SELECT *" +
 			"FROM M_NEKO n" +
 			"INNER JOIN M_IE i" +
-			"ON n.ie_id = i.ie_id" +
+			"ON n.ie_id = i.id" +
 			"ORDER BY display_number",
 	)
 	if nekoErr != nil {
@@ -76,7 +76,7 @@ func GetProfiles(c *gin.Context) {
 			&p.KaedeFlag,
 			&p.IeId,
 			&p.IeName,
-			&p.PresenterPhotoUrl,
+			&p.PhotoS3ObjectName,
 			&p.LastName,
 			&p.FirstName,
 			&p.LastNameKana,
@@ -103,11 +103,11 @@ func GetProfiles(c *gin.Context) {
 	for participantRows.Next() {
 		var p models.ParticipantProfile
 		if err := participantRows.Scan(
-			&p.ParticipantProfileId,
+			&p.Id,
 			&p.IeId,
 			&p.IeName,
 			&p.DisplayNumber,
-			&p.ParticipantPhotoUrl,
+			&p.PhotoS3ObjectName,
 			&p.LastName,
 			&p.FirstName,
 			&p.LastNameKana,
@@ -134,11 +134,11 @@ func GetProfiles(c *gin.Context) {
 	for nekoRows.Next() {
 		var p models.Neko
 		if err := nekoRows.Scan(
-			&p.NekoId,
+			&p.Id,
 			&p.IeId,
 			&p.IeName,
 			&p.DisplayNumber,
-			&p.NekoPhotoUrl,
+			&p.PhotoS3ObjectName,
 			&p.Name,
 			&p.Age,
 			&p.Temperament,

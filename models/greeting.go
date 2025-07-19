@@ -1,18 +1,18 @@
 package models
 
 type Greeting struct {
-	GreetingId    string `json:"greetingId"`
+	Id            string `json:"id"`
 	DisplayNumber int    `json:"displayNumber"`
 	Content       string `json:"content"`
 }
 
 func NewGreeting(
-	greetingId string,
+	id string,
 	displayNumber int,
 	content string,
 ) *Greeting {
 	g := new(Greeting)
-	g.GreetingId = greetingId
+	g.Id = id
 	g.DisplayNumber = displayNumber
 	g.Content = content
 

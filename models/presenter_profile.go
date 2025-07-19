@@ -6,7 +6,8 @@ type PresenterProfile struct {
 	KaedeFlag         int8      `json:"kaedeFlag"`
 	IeId              string    `json:"ieId"`
 	IeName            string    `json:"ieName"`
-	PresenterPhotoUrl string    `json:"presenterPhotoUrl"`
+	PhotoS3ObjectName string    `json:"photoS3ObjectName"`
+	PhotoUrl          string    `json:"photoUrl"`
 	LastName          string    `json:"lastName"`
 	FirstName         string    `json:"firstName"`
 	LastNameKana      string    `json:"lastNameKana"`
@@ -24,7 +25,8 @@ func NewPresenterProfile(
 	kaedeFlag int8,
 	ieId string,
 	ieName string,
-	presenterPhotoUrl string,
+	photoS3ObjectName string,
+	photoUrl string,
 	lastName string,
 	firstName string,
 	lastNameKana string,
@@ -41,7 +43,8 @@ func NewPresenterProfile(
 	p.KaedeFlag = kaedeFlag
 	p.IeId = ieId
 	p.IeName = ieName
-	p.PresenterPhotoUrl = presenterPhotoUrl
+	p.PhotoS3ObjectName = photoS3ObjectName
+	p.PhotoUrl = photoUrl
 	p.LastName = lastName
 	p.FirstName = firstName
 	p.LastNameKana = lastNameKana

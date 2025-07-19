@@ -23,8 +23,8 @@ func GetTopPage(c *gin.Context) {
 	/** 取得結果をDTOにマッピング */
 	var topPhoto models.TopPhoto
 	if photoErr := photoRow.Scan(
-		&topPhoto.TopPhotoId,  // トップ画像ID
-		&topPhoto.TopPhotoUrl, // トップ画像URL
+		&topPhoto.Id,           // トップ画像ID
+		&topPhoto.S3ObjectName, // トップ画像URL
 	); photoErr != nil {
 		/** 取得件数が０件の場合のエラー*/
 		if photoErr == sql.ErrNoRows {
@@ -71,7 +71,7 @@ func GetTopPage(c *gin.Context) {
 	for greetingRows.Next() {
 		var greeting models.Greeting
 		if err := greetingRows.Scan(
-			&greeting.GreetingId,    // 挨拶ID
+			&greeting.Id,            // 挨拶ID
 			&greeting.DisplayNumber, // 表示順
 			&greeting.Content,       //挨拶文
 		); err != nil {

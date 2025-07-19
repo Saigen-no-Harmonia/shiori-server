@@ -1,17 +1,17 @@
 package models
 
 type Ie struct {
-	IeId   string `json:"ieId"`
-	IeName string `json:"ieName"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 func NewIe(
-	ieId string,
-	ieName string,
+	id string,
+	name string,
 ) *Ie {
 	i := new(Ie)
-	i.IeId = ieId
-	i.IeName = ieName
+	i.Id = id
+	i.Name = name
 
 	return i
 }
