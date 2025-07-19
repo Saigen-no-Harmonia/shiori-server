@@ -14,7 +14,7 @@ var DB *sql.DB
 
 func InitDB() {
 	//MySQLのログイン情報取得
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_HOST"),

@@ -28,5 +28,5 @@ func main() {
 	r.GET("/gallery", controllers.GetGalleryPhotos)
 
 	// サーバ起動
-	r.RUN(":8080") //localhost:8080
+	r.Run(":8080") //localhost:8080
 }

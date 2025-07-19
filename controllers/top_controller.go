@@ -6,6 +6,7 @@ import (
 	"shiori-server/database"
 	"shiori-server/models"
 	"shiori-server/models/dto"
+	"shiori-server/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,11 +14,11 @@ import (
 func GetTopPage(c *gin.Context) {
 	/** トップ画像をDBから取得（レコードは一件のみ） */
 	photoRow := database.DB.QueryRow(
-		"SELECT * " +
-			"FROM M_TOP_PHOTO" +
-			"WHERE delete_flag = 0" +
-			"ORDER BY top_photo_id ASC" +
-			"LIMIT ONE",
+		"SELECT id, s3_object_name " +
+			"FROM M_TOP_PHOTO " +
+			"WHERE delete_flag = 0 " +
+			"ORDER BY id ASC " +
+			"LIMIT 1",
 	)
 
 	/** 取得結果をDTOにマッピング */
@@ -42,12 +43,15 @@ func GetTopPage(c *gin.Context) {
 		return
 	}
 
+	// 写真アクセス用URLを取得・格納
+	topPhoto.PhotoUrl = util.GetS3AccessUrl("トップ画像")
+
 	// 挨拶文をDBから取得（レコードは一件のみ）
 	greetingRows, greetingErr := database.DB.Query(
-		"SELECT *" +
-			"FROM M_GREETING" +
-			"WHERE delete_flag = 0" +
-			"ORDER BY greeting_id ASC",
+		"SELECT id, display_number, content " +
+			"FROM M_GREETING " +
+			"WHERE delete_flag = 0 " +
+			"ORDER BY id ASC ",
 	)
 	if greetingErr != nil {
 		/** データ取得できなかった場合のエラー */

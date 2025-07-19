@@ -5,6 +5,7 @@ import (
 	"shiori-server/database"
 	"shiori-server/models"
 	"shiori-server/models/dto"
+	"shiori-server/util"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,10 +29,10 @@ func GetGalleryPhotos(c *gin.Context) {
 	}
 
 	// DBから画像取得
-	rows, err := database.DB.Query("SELECT *"+
-		"FROM M_GALLERY_PHOTO"+
-		"WHERE delete_flag = 0"+
-		"ORDER BY display_number ASC"+
+	rows, err := database.DB.Query("SELECT id, s3_object_name, display_number "+
+		"FROM M_GALLERY_PHOTO "+
+		"WHERE delete_flag = 0 "+
+		"ORDER BY display_number ASC "+
 		"LIMIT ? OFFSET ?",
 		limit,
 		offset,
@@ -49,12 +50,16 @@ func GetGalleryPhotos(c *gin.Context) {
 		if err := rows.Scan(
 			&p.Id,
 			&p.S3ObjectName,
+			&p.DisplayNumber,
 		); err != nil {
 			c.JSON(
 				http.StatusInternalServerError,
 				gin.H{"error": err.Error()},
 			)
 		}
+
+		// S3アクセス用URLを取得・格納
+		p.PhotoUrl = util.GetS3AccessUrl(p.S3ObjectName)
 
 		galleryPhotos = append(galleryPhotos, p)
 	}

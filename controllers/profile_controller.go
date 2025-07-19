@@ -6,6 +6,7 @@ import (
 	"shiori-server/database"
 	"shiori-server/models"
 	"shiori-server/models/dto"
+	"shiori-server/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,10 +14,10 @@ import (
 func GetProfiles(c *gin.Context) {
 	/** 主催者プロフィールを取得 */
 	presenterRows, presenterErr := database.DB.Query(
-		"SELECT *" +
-			"FROM M_PRESENTER_PROFILE p" +
-			"INNER JOIN M_IE i" +
-			"ON p.ie_id = i.id",
+		"SELECT kaede_flg, ie_id, i.name AS ie_name, photo_s3_object_name, last_name, first_name, last_name_kana, first_name_kana, birth_date, birth_place, job, hobby, ramen, nickname, like_by " +
+			"FROM M_PRESENTER_PROFILE p " +
+			"INNER JOIN M_IE i " +
+			"ON p.ie_id = i.id ",
 	)
 	if presenterErr != nil {
 		/** データ取得に失敗した場合のエラー */
@@ -38,10 +39,10 @@ func GetProfiles(c *gin.Context) {
 
 	/** 参加者プロフィールを取得 */
 	participantRows, participantErr := database.DB.Query(
-		"SELECT *" +
-			"FROM M_PARTICIPANT_PROFIILE p" +
-			"INNER JOIN M_IE i" +
-			"ON p.ie_id = i.id" +
+		"SELECT p.id, ie_id, i.name AS ie_name, display_number, photo_s3_object_name, last_name, first_name, last_name_kana, first_name_kana, birth_date, birth_place, job, hobby, relation, like_food, message " +
+			"FROM M_PARTICIPANT_PROFILE p " +
+			"INNER JOIN M_IE i " +
+			"ON p.ie_id = i.id " +
 			"ORDER BY display_number",
 	)
 	if participantErr != nil {
@@ -54,11 +55,11 @@ func GetProfiles(c *gin.Context) {
 	defer participantRows.Close()
 
 	nekoRows, nekoErr := database.DB.Query(
-		"SELECT *" +
-			"FROM M_NEKO n" +
-			"INNER JOIN M_IE i" +
-			"ON n.ie_id = i.id" +
-			"ORDER BY display_number",
+		"SELECT n.id, ie_id, i.name AS ie_name, display_number, photo_s3_object_name, n.name, age, temperament, like_food " +
+			"FROM M_NEKO n " +
+			"INNER JOIN M_IE i " +
+			"ON n.ie_id = i.id " +
+			"ORDER BY display_number ",
 	)
 	if nekoErr != nil {
 		c.JSON(
@@ -94,6 +95,8 @@ func GetProfiles(c *gin.Context) {
 				gin.H{"error": err.Error()},
 			)
 		}
+		// S3アクセス用URLを取得・格納
+		p.PhotoUrl = util.GetS3AccessUrl(p.PhotoS3ObjectName)
 
 		presenterProfiles = append(presenterProfiles, p)
 	}
@@ -125,6 +128,9 @@ func GetProfiles(c *gin.Context) {
 				gin.H{"error": err.Error()},
 			)
 		}
+
+		//s3アクセス用URLを取得・格納
+		p.PhotoUrl = util.GetS3AccessUrl(p.PhotoS3ObjectName)
 
 		participantProfiles = append(participantProfiles, p)
 	}
