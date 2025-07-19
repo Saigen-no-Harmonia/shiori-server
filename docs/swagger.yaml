@@ -1,0 +1,299 @@
+basePath: /
+definitions:
+  dto.GalleryPhotoPageResponse:
+    properties:
+      galleryPhotos:
+        items:
+          $ref: '#/definitions/models.GalleryPhoto'
+        type: array
+    type: object
+  dto.ProfilePageResponse:
+    properties:
+      nekoProfiles:
+        items:
+          $ref: '#/definitions/models.Neko'
+        type: array
+      participantProfiles:
+        items:
+          $ref: '#/definitions/models.ParticipantProfile'
+        type: array
+      presenterProfiles:
+        items:
+          $ref: '#/definitions/models.PresenterProfile'
+        type: array
+    type: object
+  dto.TopPageResponse:
+    properties:
+      greetings:
+        items:
+          $ref: '#/definitions/models.Greeting'
+        type: array
+      topPhoto:
+        $ref: '#/definitions/models.TopPhoto'
+    type: object
+  models.GalleryPhoto:
+    properties:
+      displayNumber:
+        example: "2"
+        type: string
+      id:
+        example: GP001
+        type: string
+      photoUrl:
+        example: https://s3url
+        type: string
+      s3ObjectName:
+        example: galleryPhoto.img
+        type: string
+    type: object
+  models.Greeting:
+    properties:
+      content:
+        example: こんにちは。たなかです。お忙しい中と存じますが云々。
+        type: string
+      displayNumber:
+        example: 1
+        type: integer
+      id:
+        example: GT001
+        type: string
+    type: object
+  models.Neko:
+    properties:
+      age:
+        example: 30
+        type: integer
+      displayNumber:
+        example: 1
+        type: integer
+      id:
+        example: NK001
+        type: string
+      ieId:
+        example: IE000
+        type: string
+      ieName:
+        example: 鈴木
+        type: string
+      likeFood:
+        example: アーリオ・オーリオ・ペペロンティーノ
+        type: string
+      name:
+        example: nekoyagi
+        type: string
+      photoS3ObjectName:
+        example: nekogazou.img
+        type: string
+      photoUrl:
+        example: https://nekoneko
+        type: string
+      temperament:
+        example: それとなくきつい性格
+        type: string
+    type: object
+  models.ParticipantProfile:
+    properties:
+      birthDate:
+        example: "1990-05-22"
+        type: string
+      birthPlace:
+        example: 北海道
+        type: string
+      displayNumber:
+        example: 2
+        type: integer
+      firstName:
+        example: 田中
+        type: string
+      firstNameKana:
+        example: たなか
+        type: string
+      hobby:
+        example: youtube
+        type: string
+      id:
+        example: PP001
+        type: string
+      ieId:
+        example: IE999
+        type: string
+      ieName:
+        example: 田中
+        type: string
+      job:
+        example: ユーチューバー
+        type: string
+      lastName:
+        example: 太郎
+        type: string
+      lastNameKana:
+        example: たろう
+        type: string
+      likeFood:
+        example: りんご
+        type: string
+      message:
+        example: よろしく！
+        type: string
+      photoS3ObjectName:
+        example: tanakapapa
+        type: string
+      photoUrl:
+        example: https://tanakapapagazou
+        type: string
+      relation:
+        example: 父
+        type: string
+    type: object
+  models.PresenterProfile:
+    properties:
+      birthDate:
+        example: "1999-01-22"
+        type: string
+      birthPlace:
+        example: 沖縄
+        type: string
+      firstName:
+        example: 鈴木
+        type: string
+      firstNameKana:
+        example: すずき
+        type: string
+      hobby:
+        example: どろけい
+        type: string
+      ieId:
+        example: IE000
+        type: string
+      ieName:
+        example: 鈴木
+        type: string
+      job:
+        example: 警官
+        type: string
+      kaedeFlag:
+        example: 0
+        type: integer
+      lastName:
+        example: 花子
+        type: string
+      lastNameKana:
+        example: はなこ
+        type: string
+      likeBy:
+        example: 全て
+        type: string
+      nickName:
+        example: たろちゃん
+        type: string
+      photoS3ObjectName:
+        example: suzuki.img
+        type: string
+      photoUrl:
+        example: https://suzukiphoto
+        type: string
+      ramen:
+        example: あぶとら
+        type: string
+    type: object
+  models.TopPhoto:
+    properties:
+      id:
+        example: IE000
+        type: string
+      photoUrl:
+        example: https://suzukinogazou
+        type: string
+      s3ObjectName:
+        example: suzuki.img
+        type: string
+    type: object
+info:
+  contact: {}
+  description: 顔合わせアプリのエンドポイントを提供
+  license:
+    name: yagi
+  title: Shiori API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: トップ画像と挨拶文を取得。挨拶文は念のため配列だが、要素は１つしか返さない想定。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TopPageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: トップページ取得
+      tags:
+      - top
+  /gallery:
+    get:
+      consumes:
+      - application/json
+      description: ギャラリー画像の一覧をlimitとoffsetで取得
+      parameters:
+      - default: 20
+        description: 取得件数
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: 開始位置
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GalleryPhotoPageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: ギャラリー画像取得
+      tags:
+      - gallery
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: 主催者・参加者・猫プロフィール情報を取得
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProfilePageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: プロフィール情報取得
+      tags:
+      - profile
+swagger: "2.0"

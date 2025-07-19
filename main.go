@@ -1,3 +1,8 @@
+// @title Shiori API
+// @version 1.0
+// @description 顔合わせアプリのエンドポイントを提供
+// @license.name yagi
+// @BasePath /
 package main
 
 import (
@@ -5,8 +10,12 @@ import (
 	"shiori-server/controllers"
 	"shiori-server/database"
 
+	_ "shiori-server/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -20,6 +29,9 @@ func main() {
 	database.InitDB()
 
 	r := gin.Default()
+
+	// Swagger UI
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// ルーティング
 	r.GET("/", controllers.GetTopPage)

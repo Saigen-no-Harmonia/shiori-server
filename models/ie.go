@@ -1,8 +1,8 @@
 package models
 
 type Ie struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
+	Id   string `json:"id" example:"IE000"`
+	Name string `json:"name" example:"鈴木"`
 }
 
 func NewIe(

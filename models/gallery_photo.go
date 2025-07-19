@@ -1,10 +1,10 @@
 package models
 
 type GalleryPhoto struct {
-	Id            string `json:"id"`
-	S3ObjectName  string `json:"s3ObjectName"`
-	DisplayNumber string `json:"displayNumber`
-	PhotoUrl      string `json:"photoUrl"`
+	Id            string `json:"id" example:"GP001"`
+	S3ObjectName  string `json:"s3ObjectName" example:"galleryPhoto.img"`
+	DisplayNumber string `json:"displayNumber" example:"2"`
+	PhotoUrl      string `json:"photoUrl" example:"https://s3url"`
 }
 
 func NewGalleryPhoto(

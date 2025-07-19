@@ -11,6 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetTopPage トップページ情報の取得
+// @Summary トップページ取得
+// @Description トップ画像と挨拶文を取得。挨拶文は念のため配列だが、要素は１つしか返さない想定。
+// @Tags top
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.TopPageResponse
+// @Failure 500 {object} map[string]string
+// @Router / [get]
 func GetTopPage(c *gin.Context) {
 	/** トップ画像をDBから取得（レコードは一件のみ） */
 	photoRow := database.DB.QueryRow(

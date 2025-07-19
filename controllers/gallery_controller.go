@@ -11,6 +11,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetGalleryPhotos ギャラリー画像の一覧を取得
+// @Summary ギャラリー画像取得
+// @Description ギャラリー画像の一覧をlimitとoffsetで取得
+// @Tags gallery
+// @Accept json
+// @Produce json
+// @Param limit query int false "取得件数" default(20)
+// @Param offset query int false "開始位置" default(0)
+// @Success 200 {object} dto.GalleryPhotoPageResponse
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /gallery [get]
 func GetGalleryPhotos(c *gin.Context) {
 	limitStr := c.DefaultQuery("limit", "20")
 	offsetStr := c.DefaultQuery("offset", "0")

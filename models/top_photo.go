@@ -1,9 +1,9 @@
 package models
 
 type TopPhoto struct {
-	Id           string `json:"id"`
-	S3ObjectName string `json:"s3ObjectName"`
-	PhotoUrl     string `json:"photoUrl"`
+	Id           string `json:"id" example:"IE000"`
+	S3ObjectName string `json:"s3ObjectName" example:"suzuki.img"`
+	PhotoUrl     string `json:"photoUrl" example:"https://suzukinogazou"`
 }
 
 func NewTopPhoto(

@@ -1,9 +1,9 @@
 package models
 
 type Greeting struct {
-	Id            string `json:"id"`
-	DisplayNumber int    `json:"displayNumber"`
-	Content       string `json:"content"`
+	Id            string `json:"id"  example:"GT001"`
+	DisplayNumber int    `json:"displayNumber" example:"1"`
+	Content       string `json:"content" example:"こんにちは。たなかです。お忙しい中と存じますが云々。"`
 }
 
 func NewGreeting(

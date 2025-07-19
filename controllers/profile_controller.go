@@ -11,6 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetProfiles プロフィールページの情報を取得
+// @Summary プロフィール情報取得
+// @Description 主催者・参加者・猫プロフィール情報を取得
+// @Tags profile
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.ProfilePageResponse
+// @Failure 500 {object} map[string]string
+// @Router /profile [get]
 func GetProfiles(c *gin.Context) {
 	/** 主催者プロフィールを取得 */
 	presenterRows, presenterErr := database.DB.Query(

@@ -3,23 +3,23 @@ package models
 import "time"
 
 type ParticipantProfile struct {
-	Id                string    `json:"id"`
-	IeId              string    `json:"ieId"`
-	IeName            string    `json:"ieName"`
-	DisplayNumber     int       `json:"displayNumber"`
-	PhotoS3ObjectName string    `json:"photoS3ObjectName"`
-	PhotoUrl          string    `json:"photoUrl"`
-	LastName          string    `json:"lastName"`
-	FirstName         string    `json:"firstName"`
-	LastNameKana      string    `json:"lastNameKana"`
-	FirstNameKana     string    `json:"firstNameKana"`
-	BirthDate         time.Time `json:"birthDate"`
-	BirthPlace        string    `json:"birthPlace"`
-	Job               string    `json:"job"`
-	Hobby             string    `json:"hobby"`
-	Relation          string    `json:"relation"`
-	LikeFood          string    `json:"likeFood"`
-	Message           string    `json:"message"`
+	Id                string    `json:"id" example:"PP001"`
+	IeId              string    `json:"ieId" example:"IE999"`
+	IeName            string    `json:"ieName" example:"田中"`
+	DisplayNumber     int       `json:"displayNumber" example:"2"`
+	PhotoS3ObjectName string    `json:"photoS3ObjectName" example:"tanakapapa"`
+	PhotoUrl          string    `json:"photoUrl" example:"https://tanakapapagazou"`
+	LastName          string    `json:"lastName" example:"太郎"`
+	FirstName         string    `json:"firstName" example:"田中"`
+	LastNameKana      string    `json:"lastNameKana" example:"たろう"`
+	FirstNameKana     string    `json:"firstNameKana" example:"たなか"`
+	BirthDate         time.Time `json:"birthDate" example:"1990-05-22"`
+	BirthPlace        string    `json:"birthPlace" example:"北海道"`
+	Job               string    `json:"job" example:"ユーチューバー"`
+	Hobby             string    `json:"hobby" example:"youtube"`
+	Relation          string    `json:"relation" example:"父"`
+	LikeFood          string    `json:"likeFood" example:"りんご"`
+	Message           string    `json:"message" example:"よろしく！"`
 }
 
 func NewParticipantProfile(

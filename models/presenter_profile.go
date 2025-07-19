@@ -3,22 +3,22 @@ package models
 import "time"
 
 type PresenterProfile struct {
-	KaedeFlag         int8      `json:"kaedeFlag"`
-	IeId              string    `json:"ieId"`
-	IeName            string    `json:"ieName"`
-	PhotoS3ObjectName string    `json:"photoS3ObjectName"`
-	PhotoUrl          string    `json:"photoUrl"`
-	LastName          string    `json:"lastName"`
-	FirstName         string    `json:"firstName"`
-	LastNameKana      string    `json:"lastNameKana"`
-	FirstNameKana     string    `json:"firstNameKana"`
-	BirthDate         time.Time `json:"birthDate"`
-	BirthPlace        string    `json:"birthPlace"`
-	Job               string    `json:"job"`
-	Hobby             string    `json:"hobby"`
-	Ramen             string    `json:"ramen"`
-	NickName          string    `json:"nickName"`
-	LikeBy            string    `json:"likeBy"`
+	KaedeFlag         int8      `json:"kaedeFlag" example:"0"`
+	IeId              string    `json:"ieId" example:"IE000"`
+	IeName            string    `json:"ieName" example:"鈴木"`
+	PhotoS3ObjectName string    `json:"photoS3ObjectName" example:"suzuki.img"`
+	PhotoUrl          string    `json:"photoUrl" example:"https://suzukiphoto"`
+	LastName          string    `json:"lastName" example:"花子"`
+	FirstName         string    `json:"firstName" example:"鈴木"`
+	LastNameKana      string    `json:"lastNameKana" example:"はなこ"`
+	FirstNameKana     string    `json:"firstNameKana" example:"すずき"`
+	BirthDate         time.Time `json:"birthDate" example:"1999-01-22"`
+	BirthPlace        string    `json:"birthPlace" example:"沖縄"`
+	Job               string    `json:"job" example:"警官"`
+	Hobby             string    `json:"hobby" example:"どろけい"`
+	Ramen             string    `json:"ramen" example:"あぶとら"`
+	NickName          string    `json:"nickName" example:"たろちゃん"`
+	LikeBy            string    `json:"likeBy" example:"全て"`
 }
 
 func NewPresenterProfile(

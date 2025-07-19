@@ -1,16 +1,16 @@
 package models
 
 type Neko struct {
-	Id                string `json:"id"`
-	IeId              string `json:"ieId"`
-	IeName            string `json:"ieName"`
-	DisplayNumber     int    `json:"displayNumber"`
-	PhotoS3ObjectName string `json:"photoS3ObjectName"`
-	PhotoUrl          string `json:"photoUrl"`
-	Name              string `json:"name"`
-	Age               int    `json:"age"`
-	Temperament       string `json:"temperament"`
-	LikeFood          string `json:"likeFood"`
+	Id                string `json:"id" example:"NK001"`
+	IeId              string `json:"ieId" example:"IE000"`
+	IeName            string `json:"ieName" example:"鈴木"`
+	DisplayNumber     int    `json:"displayNumber" example:"1"`
+	PhotoS3ObjectName string `json:"photoS3ObjectName" example:"nekogazou.img"`
+	PhotoUrl          string `json:"photoUrl" example:"https://nekoneko"`
+	Name              string `json:"name" example:"nekoyagi"`
+	Age               int    `json:"age" example:"30"`
+	Temperament       string `json:"temperament" example:"それとなくきつい性格"`
+	LikeFood          string `json:"likeFood" example:"アーリオ・オーリオ・ペペロンティーノ"`
 }
 
 func NewNeko(
