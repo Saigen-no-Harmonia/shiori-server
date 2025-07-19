@@ -5,28 +5,29 @@ import (
 	"net/http"
 	"shiori-server/database"
 	"shiori-server/models"
-	"shiori-server/models/dto"
+	"shiori-server/models/resource"
 	"shiori-server/util"
 
 	"github.com/gin-gonic/gin"
 )
 
-// GetProfiles プロフィールページの情報を取得
-// @Summary プロフィール情報取得
+// GetFamilies 家族情報ページの情報を取得
+// @Summary 家族情報取得
 // @Description 主催者・参加者・猫プロフィール情報を取得
-// @Tags profile
+// @Tags families
 // @Accept json
 // @Produce json
-// @Success 200 {object} dto.ProfilePageResponse
+// @Success 200 {object} resource.FamiliesPageResource
 // @Failure 500 {object} map[string]string
-// @Router /profile [get]
-func GetProfiles(c *gin.Context) {
+// @Router /families [get]
+func GetFamilies(c *gin.Context) {
 	/** 主催者プロフィールを取得 */
 	presenterRows, presenterErr := database.DB.Query(
 		"SELECT kaede_flg, ie_id, i.name AS ie_name, photo_s3_object_name, last_name, first_name, last_name_kana, first_name_kana, birth_date, birth_place, job, hobby, ramen, nickname, like_by " +
 			"FROM M_PRESENTER_PROFILE p " +
 			"INNER JOIN M_IE i " +
-			"ON p.ie_id = i.id ",
+			"ON p.ie_id = i.id " +
+			"ORDER BY kaede_flg ASC ",
 	)
 	if presenterErr != nil {
 		/** データ取得に失敗した場合のエラー */
@@ -52,7 +53,7 @@ func GetProfiles(c *gin.Context) {
 			"FROM M_PARTICIPANT_PROFILE p " +
 			"INNER JOIN M_IE i " +
 			"ON p.ie_id = i.id " +
-			"ORDER BY display_number",
+			"ORDER BY display_number ASC",
 	)
 	if participantErr != nil {
 		c.JSON(
@@ -68,7 +69,7 @@ func GetProfiles(c *gin.Context) {
 			"FROM M_NEKO n " +
 			"INNER JOIN M_IE i " +
 			"ON n.ie_id = i.id " +
-			"ORDER BY display_number ",
+			"ORDER BY display_number ASC ",
 	)
 	if nekoErr != nil {
 		c.JSON(
@@ -165,9 +166,37 @@ func GetProfiles(c *gin.Context) {
 			)
 		}
 
+		p.PhotoUrl = util.GetS3AccessUrl(p.PhotoS3ObjectName)
+
 		nekoProfiles = append(nekoProfiles, p)
 	}
 
-	profilePageResponse := dto.NewProfilePageResponse(presenterProfiles, participantProfiles, nekoProfiles)
-	c.JSON(http.StatusOK, profilePageResponse)
+	// レスポンス生成
+	var FamiliesPageResponse []resource.FamilyResource
+
+	// DBから取得したデータを、家族単位の情報になるよう整理する
+	for i := 0; i < len(presenterProfiles); i++ {
+		p := presenterProfiles[i]
+
+		// ParticipantProfileのうち、ieIdが同じものを抽出してResource作成
+		var ppSlice []models.ParticipantProfile
+		for j := 0; j < len(participantProfiles); j++ {
+			if participantProfiles[j].IeId == p.IeId {
+				ppSlice = append(ppSlice, participantProfiles[j])
+			}
+		}
+
+		//NekoProfileのうち、ieIdが同じものを抽出してResource作成
+		var npSlice []models.Neko
+		for j := 0; j < len(nekoProfiles); j++ {
+			if nekoProfiles[j].IeId == p.IeId {
+				npSlice = append(npSlice, nekoProfiles[j])
+			}
+		}
+
+		// FamilyResourceに置き換えてレスポンスに詰める
+		FamiliesPageResponse = append(FamiliesPageResponse, *resource.CreateFamilyProfileResource(p, ppSlice, npSlice))
+	}
+
+	c.JSON(http.StatusOK, FamiliesPageResponse)
 }

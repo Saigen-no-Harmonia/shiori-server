@@ -35,7 +35,7 @@ func main() {
 
 	// ルーティング
 	r.GET("/", controllers.GetTopPage)
-	r.GET("/profile", controllers.GetProfiles)
+	r.GET("/families", controllers.GetFamilies)
 	// r.GET("/access", GetAccess)
 	r.GET("/gallery", controllers.GetGalleryPhotos)
 

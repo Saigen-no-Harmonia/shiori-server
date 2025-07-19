@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"shiori-server/database"
 	"shiori-server/models"
-	"shiori-server/models/dto"
+	"shiori-server/models/resource"
 	"shiori-server/util"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ import (
 // @Tags top
 // @Accept json
 // @Produce json
-// @Success 200 {object} dto.TopPageResponse
+// @Success 200 {object} resource.TopPageResource
 // @Failure 500 {object} map[string]string
 // @Router / [get]
 func GetTopPage(c *gin.Context) {
@@ -55,15 +55,25 @@ func GetTopPage(c *gin.Context) {
 	// 写真アクセス用URLを取得・格納
 	topPhoto.PhotoUrl = util.GetS3AccessUrl("トップ画像")
 
-	// 挨拶文をDBから取得（レコードは一件のみ）
-	greetingRows, greetingErr := database.DB.Query(
-		"SELECT id, display_number, content " +
+	// ResourceにMap
+	topPhotoResource := resource.MapToTopPhotoResource(topPhoto)
+
+	// 挨拶文をDBから取得
+	greetingRow := database.DB.QueryRow(
+		"SELECT id, content " +
 			"FROM M_GREETING " +
 			"WHERE delete_flag = 0 " +
-			"ORDER BY id ASC ",
+			"ORDER BY id ASC " +
+			"LIMIT 1",
 	)
-	if greetingErr != nil {
-		/** データ取得できなかった場合のエラー */
+
+	/** 取得結果をDTOにマッピング */
+	var greeting models.Greeting
+	if greetingErr := greetingRow.Scan(
+		&greeting.Id,
+		&greeting.Content,
+	); greetingErr != nil {
+		/** 取得件数が０件の場合のエラー*/
 		if greetingErr == sql.ErrNoRows {
 			c.JSON(
 				http.StatusNotFound,
@@ -71,32 +81,18 @@ func GetTopPage(c *gin.Context) {
 			)
 			return
 		}
+		//** その他のエラーの場合 */
 		c.JSON(
 			http.StatusInternalServerError,
 			gin.H{"error": greetingErr.Error()},
 		)
-	}
-	defer greetingRows.Close()
-	// 挨拶文テーブルをクローズ?
-
-	var greetings []models.Greeting
-	/** 取得結果を、要素の数だけ、DTOにマッピング*/
-	for greetingRows.Next() {
-		var greeting models.Greeting
-		if err := greetingRows.Scan(
-			&greeting.Id,            // 挨拶ID
-			&greeting.DisplayNumber, // 表示順
-			&greeting.Content,       //挨拶文
-		); err != nil {
-			c.JSON(http.StatusInternalServerError,
-				gin.H{"error": err.Error()})
-		}
-
-		/** 配列に格納 */
-		greetings = append(greetings, greeting)
+		return
 	}
 
-	// DTOにつめて返却
-	topPageResponse := dto.NewTopPageResponse(topPhoto, greetings)
-	c.JSON(http.StatusOK, topPageResponse)
+	// ResourceにMap
+	greetingResource := resource.MapToGreetingResource(greeting)
+
+	// Resourceに詰めて返却
+	response := resource.NewTopPageResource(*topPhotoResource, *greetingResource)
+	c.JSON(http.StatusOK, response)
 }

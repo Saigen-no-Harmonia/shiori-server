@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"shiori-server/database"
 	"shiori-server/models"
-	"shiori-server/models/dto"
+	"shiori-server/models/resource"
 	"shiori-server/util"
 	"strconv"
 
@@ -19,7 +19,7 @@ import (
 // @Produce json
 // @Param limit query int false "取得件数" default(20)
 // @Param offset query int false "開始位置" default(0)
-// @Success 200 {object} dto.GalleryPhotoPageResponse
+// @Success 200 {object} resource.GalleryPhotoPageResource
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /gallery [get]
@@ -76,6 +76,16 @@ func GetGalleryPhotos(c *gin.Context) {
 		galleryPhotos = append(galleryPhotos, p)
 	}
 
-	response := dto.NewGalleryPhotoPageresponse(galleryPhotos)
+	// Resourceに変換
+	var galleryPhotoPageResources []resource.GalleryPhotoResource
+	for index := 0; index < len(galleryPhotos); index++ {
+		src := galleryPhotos[index]
+		dest := resource.MapToGalleryResource(src)
+		galleryPhotoPageResources = append(galleryPhotoPageResources, *dest)
+	}
+
+	// レスポンスを生成
+	response := resource.NewGalleryPhotoPageResource(galleryPhotoPageResources)
+
 	c.JSON(http.StatusOK, response)
 }

@@ -35,7 +35,39 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.TopPageResponse"
+                            "$ref": "#/definitions/resource.TopPageResource"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/families": {
+            "get": {
+                "description": "主催者・参加者・猫プロフィール情報を取得",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "families"
+                ],
+                "summary": "家族情報取得",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/resource.FamiliesPageResource"
                         }
                     },
                     "500": {
@@ -83,7 +115,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/dto.GalleryPhotoPageResponse"
+                            "$ref": "#/definitions/resource.GalleryPhotoPageResource"
                         }
                     },
                     "400": {
@@ -106,90 +138,60 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/profile": {
-            "get": {
-                "description": "主催者・参加者・猫プロフィール情報を取得",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "profile"
-                ],
-                "summary": "プロフィール情報取得",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.ProfilePageResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
-        "dto.GalleryPhotoPageResponse": {
+        "resource.FamiliesPageResource": {
             "type": "object",
             "properties": {
-                "galleryPhotos": {
+                "families": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.GalleryPhoto"
+                        "$ref": "#/definitions/resource.FamilyResource"
                     }
                 }
             }
         },
-        "dto.ProfilePageResponse": {
+        "resource.FamilyResource": {
             "type": "object",
             "properties": {
+                "ieId": {
+                    "type": "string",
+                    "example": "IE000"
+                },
+                "ieName": {
+                    "type": "string",
+                    "example": "田中"
+                },
                 "nekoProfiles": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Neko"
+                        "$ref": "#/definitions/resource.NekoProfileResource"
                     }
                 },
                 "participantProfiles": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.ParticipantProfile"
+                        "$ref": "#/definitions/resource.ParticipantProfileResource"
                     }
                 },
-                "presenterProfiles": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.PresenterProfile"
-                    }
+                "presenterProfile": {
+                    "$ref": "#/definitions/resource.PresenterProfileResource"
                 }
             }
         },
-        "dto.TopPageResponse": {
+        "resource.GalleryPhotoPageResource": {
             "type": "object",
             "properties": {
-                "greetings": {
+                "galleryPhotos": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.Greeting"
+                        "$ref": "#/definitions/resource.GalleryPhotoResource"
                     }
-                },
-                "topPhoto": {
-                    "$ref": "#/definitions/models.TopPhoto"
                 }
             }
         },
-        "models.GalleryPhoto": {
+        "resource.GalleryPhotoResource": {
             "type": "object",
             "properties": {
                 "displayNumber": {
@@ -203,31 +205,19 @@ const docTemplate = `{
                 "photoUrl": {
                     "type": "string",
                     "example": "https://s3url"
-                },
-                "s3ObjectName": {
-                    "type": "string",
-                    "example": "galleryPhoto.img"
                 }
             }
         },
-        "models.Greeting": {
+        "resource.GreetingResource": {
             "type": "object",
             "properties": {
                 "content": {
                     "type": "string",
                     "example": "こんにちは。たなかです。お忙しい中と存じますが云々。"
-                },
-                "displayNumber": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "id": {
-                    "type": "string",
-                    "example": "GT001"
                 }
             }
         },
-        "models.Neko": {
+        "resource.NekoProfileResource": {
             "type": "object",
             "properties": {
                 "age": {
@@ -242,14 +232,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "NK001"
                 },
-                "ieId": {
-                    "type": "string",
-                    "example": "IE000"
-                },
-                "ieName": {
-                    "type": "string",
-                    "example": "鈴木"
-                },
                 "likeFood": {
                     "type": "string",
                     "example": "アーリオ・オーリオ・ペペロンティーノ"
@@ -257,10 +239,6 @@ const docTemplate = `{
                 "name": {
                     "type": "string",
                     "example": "nekoyagi"
-                },
-                "photoS3ObjectName": {
-                    "type": "string",
-                    "example": "nekogazou.img"
                 },
                 "photoUrl": {
                     "type": "string",
@@ -272,7 +250,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.ParticipantProfile": {
+        "resource.ParticipantProfileResource": {
             "type": "object",
             "properties": {
                 "birthDate": {
@@ -303,14 +281,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "PP001"
                 },
-                "ieId": {
-                    "type": "string",
-                    "example": "IE999"
-                },
-                "ieName": {
-                    "type": "string",
-                    "example": "田中"
-                },
                 "job": {
                     "type": "string",
                     "example": "ユーチューバー"
@@ -331,10 +301,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "よろしく！"
                 },
-                "photoS3ObjectName": {
-                    "type": "string",
-                    "example": "tanakapapa"
-                },
                 "photoUrl": {
                     "type": "string",
                     "example": "https://tanakapapagazou"
@@ -345,7 +311,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.PresenterProfile": {
+        "resource.PresenterProfileResource": {
             "type": "object",
             "properties": {
                 "birthDate": {
@@ -358,39 +324,27 @@ const docTemplate = `{
                 },
                 "firstName": {
                     "type": "string",
-                    "example": "鈴木"
+                    "example": "田中"
                 },
                 "firstNameKana": {
                     "type": "string",
-                    "example": "すずき"
+                    "example": "たなか"
                 },
                 "hobby": {
                     "type": "string",
                     "example": "どろけい"
                 },
-                "ieId": {
-                    "type": "string",
-                    "example": "IE000"
-                },
-                "ieName": {
-                    "type": "string",
-                    "example": "鈴木"
-                },
                 "job": {
                     "type": "string",
                     "example": "警官"
                 },
-                "kaedeFlag": {
-                    "type": "integer",
-                    "example": 0
-                },
                 "lastName": {
                     "type": "string",
-                    "example": "花子"
+                    "example": "太郎"
                 },
                 "lastNameKana": {
                     "type": "string",
-                    "example": "はなこ"
+                    "example": "たろう"
                 },
                 "likeBy": {
                     "type": "string",
@@ -400,13 +354,9 @@ const docTemplate = `{
                     "type": "string",
                     "example": "たろちゃん"
                 },
-                "photoS3ObjectName": {
-                    "type": "string",
-                    "example": "suzuki.img"
-                },
                 "photoUrl": {
                     "type": "string",
-                    "example": "https://suzukiphoto"
+                    "example": "https://tarouphoto"
                 },
                 "ramen": {
                     "type": "string",
@@ -414,20 +364,23 @@ const docTemplate = `{
                 }
             }
         },
-        "models.TopPhoto": {
+        "resource.TopPageResource": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string",
-                    "example": "IE000"
+                "greeting": {
+                    "$ref": "#/definitions/resource.GreetingResource"
                 },
+                "topPhoto": {
+                    "$ref": "#/definitions/resource.TopPhotoResource"
+                }
+            }
+        },
+        "resource.TopPhotoResource": {
+            "type": "object",
+            "properties": {
                 "photoUrl": {
                     "type": "string",
                     "example": "https://suzukinogazou"
-                },
-                "s3ObjectName": {
-                    "type": "string",
-                    "example": "suzuki.img"
                 }
             }
         }
