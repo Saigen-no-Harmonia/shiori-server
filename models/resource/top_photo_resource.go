@@ -21,6 +21,6 @@ func MapToTopPhotoResource(
 	p models.TopPhoto,
 ) *TopPhotoResource {
 	return NewTopPhotoResource(
-		p.Id,
+		p.PhotoUrl,
 	)
 }

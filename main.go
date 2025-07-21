@@ -9,6 +9,7 @@ import (
 	"log"
 	"shiori-server/controllers"
 	"shiori-server/database"
+	"shiori-server/util"
 
 	_ "shiori-server/docs"
 
@@ -24,6 +25,9 @@ func main() {
 	if err != nil {
 		log.Fatal(".envファイルの読み込みに失敗しました")
 	}
+
+	// S3接続のための初期化処理
+	util.InitS3()
 
 	// DBの初期化
 	database.InitDB()

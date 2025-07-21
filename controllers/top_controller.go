@@ -53,7 +53,7 @@ func GetTopPage(c *gin.Context) {
 	}
 
 	// 写真アクセス用URLを取得・格納
-	topPhoto.PhotoUrl = util.GetS3AccessUrl("トップ画像")
+	topPhoto.PhotoUrl = util.GetS3AccessUrl(topPhoto.S3ObjectName)
 
 	// ResourceにMap
 	topPhotoResource := resource.MapToTopPhotoResource(topPhoto)
