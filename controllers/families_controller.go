@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"net/http"
 	"shiori-server/database"
 	"shiori-server/models"
@@ -172,7 +173,7 @@ func GetFamilies(c *gin.Context) {
 	}
 
 	// レスポンス生成
-	var FamiliesPageResponse []resource.FamilyResource
+	var response []resource.FamilyResource
 
 	// DBから取得したデータを、家族単位の情報になるよう整理する
 	for i := 0; i < len(presenterProfiles); i++ {
@@ -195,8 +196,16 @@ func GetFamilies(c *gin.Context) {
 		}
 
 		// FamilyResourceに置き換えてレスポンスに詰める
-		FamiliesPageResponse = append(FamiliesPageResponse, *resource.CreateFamilyProfileResource(p, ppSlice, npSlice))
+		response = append(response, *resource.CreateFamilyProfileResource(p, ppSlice, npSlice))
 	}
 
-	c.JSON(http.StatusOK, FamiliesPageResponse)
+	c.Writer.Header().Set("Content-Type", "application/json")
+	c.Writer.WriteHeader(http.StatusOK)
+
+	encoder := json.NewEncoder(c.Writer)
+	encoder.SetEscapeHTML(false)
+
+	if err := encoder.Encode(response); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 }

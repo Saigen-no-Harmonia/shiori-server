@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 	"shiori-server/database"
 	"shiori-server/models"
@@ -87,5 +88,13 @@ func GetGalleryPhotos(c *gin.Context) {
 	// レスポンスを生成
 	response := resource.NewGalleryPhotoPageResource(galleryPhotoPageResources)
 
-	c.JSON(http.StatusOK, response)
+	c.Writer.Header().Set("Content-Type", "application/json")
+	c.Writer.WriteHeader(http.StatusOK)
+
+	encoder := json.NewEncoder(c.Writer)
+	encoder.SetEscapeHTML(false)
+
+	if err := encoder.Encode(response); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
 }

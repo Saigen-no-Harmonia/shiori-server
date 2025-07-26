@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -18,8 +19,7 @@ func GetS3AccessUrl(s3ObjectKey string) string {
 	}, s3.WithPresignExpires(15*time.Minute))
 
 	if err != nil {
-		// 実際のサービスではロギングやエラーハンドリング推奨
-		return ""
+		log.Fatalf("unable to get presigned URL, %v", err)
 	}
 
 	return resp.URL
