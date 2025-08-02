@@ -21,6 +21,8 @@ func InitDB() {
 		os.Getenv("DB_NAME"),
 	)
 
+	log.Printf("Connecting to DB with user: %s host: %s port: %s dbname: %s", os.Getenv("DB_USER"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+
 	log.Println("DB接続開始")
 	var err error
 	DB, err = sql.Open("mysql", dsn)

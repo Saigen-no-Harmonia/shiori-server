@@ -7,47 +7,40 @@ package main
 
 import (
 	"log"
-	"shiori-server/controllers"
-	"shiori-server/database"
-	"shiori-server/util"
 
 	_ "shiori-server/docs"
-
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
-	log.Println("===== Starting Gin Server =====")
+	log.Println("Hello, Gin server starting")
+	// log.Println("===== Starting Gin Server =====")
 
-	// .envファイルの読み込み
-	log.Println("===== Starting load dotenv =====")
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(".envファイルの読み込みに失敗しました")
-	}
+	// // .envファイルの読み込み
+	// log.Println("===== Starting load dotenv =====")
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal(".envファイルの読み込みに失敗しました")
+	// }
 
-	// S3接続のための初期化処理
-	log.Println("===== Starting init s3 =====")
-	util.InitS3()
+	// // S3接続のための初期化処理
+	// log.Println("===== Starting init s3 =====")
+	// util.InitS3()
 
-	// DBの初期化
-	log.Println("===== Starting init DB =====")
-	database.InitDB()
+	// // DBの初期化
+	// log.Println("===== Starting init DB =====")
+	// database.InitDB()
 
-	r := gin.Default()
+	// r := gin.Default()
 
-	// Swagger UI
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// // Swagger UI
+	// r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// ルーティング
-	r.GET("/", controllers.GetTopPage)
-	r.GET("/families", controllers.GetFamilies)
-	r.GET("/access", controllers.GetAccessPage)
-	r.GET("/gallery", controllers.GetGalleryPhotos)
+	// // ルーティング
+	// r.GET("/", controllers.GetTopPage)
+	// r.GET("/families", controllers.GetFamilies)
+	// r.GET("/access", controllers.GetAccessPage)
+	// r.GET("/gallery", controllers.GetGalleryPhotos)
 
-	// サーバ起動
-	r.Run(":8080") //localhost:8080
+	// // サーバ起動
+	// r.Run(":8080") //localhost:8080
 }
