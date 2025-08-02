@@ -1,5 +1,35 @@
 basePath: /
 definitions:
+  resource.AccessPageResource:
+    properties:
+      gatheringDate:
+        example: "2000-01-31T00:00:00+09:00"
+        type: string
+      gatheringSpot:
+        example: 松戸新田駅の近くのいなげや
+        type: string
+      latitude:
+        example: "40.999999"
+        type: string
+      longitude:
+        example: "140.999999"
+        type: string
+      restaurantName:
+        example: oisiiRestaurant
+        type: string
+      restaurantUrl:
+        example: https://oisiiRestaurant.com
+        type: string
+      startingDate:
+        example: "2000-01-31T00:15:00+09:00"
+        type: string
+      venueAccessPageUrl:
+        example: https://kaijou/access
+        type: string
+      venueAddress:
+        example: 千葉県松戸市上本郷1-2-999
+        type: string
+    type: object
   resource.FamiliesPageResource:
     properties:
       families:
@@ -201,6 +231,27 @@ paths:
       summary: トップページ取得
       tags:
       - top
+  /access:
+    get:
+      consumes:
+      - application/json
+      description: アクセス情報を返却。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/resource.AccessPageResource'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: アクセスページ取得
+      tags:
+      - access
   /families:
     get:
       consumes:

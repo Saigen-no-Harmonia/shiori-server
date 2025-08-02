@@ -50,6 +50,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/access": {
+            "get": {
+                "description": "アクセス情報を返却。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "access"
+                ],
+                "summary": "アクセスページ取得",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/resource.AccessPageResource"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/families": {
             "get": {
                 "description": "主催者・参加者・猫プロフィール情報を取得",
@@ -141,6 +173,47 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "resource.AccessPageResource": {
+            "type": "object",
+            "properties": {
+                "gatheringDate": {
+                    "type": "string",
+                    "example": "2000-01-31T00:00:00+09:00"
+                },
+                "gatheringSpot": {
+                    "type": "string",
+                    "example": "松戸新田駅の近くのいなげや"
+                },
+                "latitude": {
+                    "type": "string",
+                    "example": "40.999999"
+                },
+                "longitude": {
+                    "type": "string",
+                    "example": "140.999999"
+                },
+                "restaurantName": {
+                    "type": "string",
+                    "example": "oisiiRestaurant"
+                },
+                "restaurantUrl": {
+                    "type": "string",
+                    "example": "https://oisiiRestaurant.com"
+                },
+                "startingDate": {
+                    "type": "string",
+                    "example": "2000-01-31T00:15:00+09:00"
+                },
+                "venueAccessPageUrl": {
+                    "type": "string",
+                    "example": "https://kaijou/access"
+                },
+                "venueAddress": {
+                    "type": "string",
+                    "example": "千葉県松戸市上本郷1-2-999"
+                }
+            }
+        },
         "resource.FamiliesPageResource": {
             "type": "object",
             "properties": {
