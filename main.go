@@ -20,16 +20,21 @@ import (
 )
 
 func main() {
+	log.Println("===== Starting Gin Server =====")
+
 	// .envファイルの読み込み
+	log.Println("===== Starting load dotenv =====")
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(".envファイルの読み込みに失敗しました")
 	}
 
 	// S3接続のための初期化処理
+	log.Println("===== Starting init s3 =====")
 	util.InitS3()
 
 	// DBの初期化
+	log.Println("===== Starting init DB =====")
 	database.InitDB()
 
 	r := gin.Default()

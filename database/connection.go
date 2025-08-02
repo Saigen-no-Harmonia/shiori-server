@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -26,6 +27,7 @@ func InitDB() {
 	//MySQLのログイン認証
 	DB, err = sql.Open("mysql", dsn)
 	if err != nil {
+		log.Println("DBログインでエラーが起きました")
 		panic(err)
 	}
 
