@@ -39,6 +39,8 @@ func main() {
 
 	r := gin.Default()
 
+	r.Use(util.AuthByTokenMiddleware())
+
 	// Swagger UI
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
