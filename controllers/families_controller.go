@@ -173,7 +173,7 @@ func GetFamilies(c *gin.Context) {
 	}
 
 	// レスポンス生成
-	var response []resource.FamilyResource
+	var families []resource.FamilyResource
 
 	// DBから取得したデータを、家族単位の情報になるよう整理する
 	for i := 0; i < len(presenterProfiles); i++ {
@@ -196,8 +196,10 @@ func GetFamilies(c *gin.Context) {
 		}
 
 		// FamilyResourceに置き換えてレスポンスに詰める
-		response = append(response, *resource.CreateFamilyProfileResource(p, ppSlice, npSlice))
+		families = append(families, *resource.CreateFamilyProfileResource(p, ppSlice, npSlice))
 	}
+
+	response := resource.NewProfilePageResponse(families)
 
 	c.Writer.Header().Set("Content-Type", "application/json")
 	c.Writer.WriteHeader(http.StatusOK)

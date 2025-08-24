@@ -1,2 +1,4 @@
 *.env
 *.sql
+shiori-server-bin
+shiori-server
