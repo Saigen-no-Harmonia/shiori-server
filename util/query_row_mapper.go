@@ -5,6 +5,8 @@ import (
 	"shiori-server/models"
 )
 
+/** DBから取得したデータをmodelにマッピングする */
+
 func MapToNekoProfile(nekoRow *sql.Rows) models.Neko {
 	var p models.Neko
 	if err := nekoRow.Scan(
@@ -18,8 +20,7 @@ func MapToNekoProfile(nekoRow *sql.Rows) models.Neko {
 		&p.Temperament,
 		&p.LikeFood,
 	); err != nil {
-
-		panic("unimplemented")
+		panic("ねこ情報の処理に失敗しました。")
 
 	}
 
@@ -46,7 +47,7 @@ func MapToParticipantProfile(participantRow *sql.Rows) models.ParticipantProfile
 		&p.LikeFood,
 		&p.Message,
 	); err != nil {
-		panic("参加者情報の処理に失敗しました。")
+		panic("参加者プロフィールの処理に失敗しました。")
 	}
 
 	return p
@@ -71,8 +72,31 @@ func MapToPresenterProfile(presenterRow *sql.Rows) models.PresenterProfile {
 		&p.NickName,
 		&p.LikeBy,
 	); err != nil {
-		panic("主催者情報の処理に失敗しました。")
+		panic("主催者プロフィールの処理に失敗しました。")
 	}
 
 	return p
+}
+
+func MapToAccessInfo(accessRow *sql.Row) (models.AccessInfo, error) {
+
+	var accessInfo models.AccessInfo
+	if accessInfoErr := accessRow.Scan(
+		&accessInfo.VenueId,
+		&accessInfo.VenueName,
+		&accessInfo.VenueAddress,
+		&accessInfo.VenueAccessPageUrl,
+		&accessInfo.Latitude,
+		&accessInfo.Longitude,
+		&accessInfo.GatheringSpot,
+		&accessInfo.GatheringDate,
+		&accessInfo.StartingDate,
+		&accessInfo.RestaurantName,
+		&accessInfo.RestaurantUrl,
+	); accessInfoErr != nil {
+		return accessInfo, accessInfoErr
+	}
+
+	return accessInfo, nil
+
 }

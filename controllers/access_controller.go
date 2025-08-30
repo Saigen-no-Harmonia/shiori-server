@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 	"shiori-server/database"
-	"shiori-server/models"
 	"shiori-server/models/resource"
+	"shiori-server/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,21 +28,9 @@ func GetAccessPage(c *gin.Context) {
 	)
 
 	/** 取得結果をDTOにマッピング */
-	var accessInfo models.AccessInfo
-	if accessInfoErr := accessRow.Scan(
-		&accessInfo.VenueId,
-		&accessInfo.VenueName,
-		&accessInfo.VenueAddress,
-		&accessInfo.VenueAccessPageUrl,
-		&accessInfo.Latitude,
-		&accessInfo.Longitude,
-		&accessInfo.GatheringSpot,
-		&accessInfo.GatheringDate,
-		&accessInfo.StartingDate,
-		&accessInfo.RestaurantName,
-		&accessInfo.RestaurantUrl,
-	); accessInfoErr != nil {
-		/** 取得件数が０件の場合のエラー*/
+	accessInfo, accessInfoErr := util.MapToAccessInfo(accessRow)
+	if accessInfoErr != nil {
+		/** 取得できなかった場合 */
 		if accessInfoErr == sql.ErrNoRows {
 			c.JSON(
 				http.StatusNotFound,
