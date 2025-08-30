@@ -80,9 +80,8 @@ func GetGalleryPhotos(c *gin.Context) {
 	// Resourceに変換
 	var galleryPhotoPageResources []resource.GalleryPhotoResource
 	for index := 0; index < len(galleryPhotos); index++ {
-		src := galleryPhotos[index]
-		dest := resource.MapToGalleryResource(src)
-		galleryPhotoPageResources = append(galleryPhotoPageResources, *dest)
+		p := resource.MapToGalleryResource(galleryPhotos[index])
+		galleryPhotoPageResources = append(galleryPhotoPageResources, *p)
 	}
 
 	// レスポンスを生成

@@ -35,13 +35,13 @@ func GetFamilies(c *gin.Context) {
 		if presenterErr == sql.ErrNoRows {
 			c.JSON(
 				http.StatusNotFound,
-				gin.H{"error": presenterErr.Error()},
+				gin.H{"主催者情報の取得に失敗しました。": presenterErr.Error()},
 			)
 		}
 		/** その他のエラー */
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{"error": presenterErr.Error()},
+			gin.H{"主催者情報取得時に予期せぬエラーが生じました。": presenterErr.Error()},
 		)
 		return
 	}
@@ -57,14 +57,23 @@ func GetFamilies(c *gin.Context) {
 			"ORDER BY display_number ASC",
 	)
 	if participantErr != nil {
+		if participantErr == sql.ErrNoRows {
+			c.JSON(
+				http.StatusNotFound,
+				gin.H{"参加者情報の取得に失敗しました": participantErr},
+			)
+		}
+
+		/** その他のエラー */
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{"error": participantErr.Error()},
+			gin.H{"参加者情報取得時に予期せぬエラーが生じました。": participantErr.Error()},
 		)
 	}
 	/** 処理終了後にクローズ */
 	defer participantRows.Close()
 
+	/** ねこプロフィールを取得 */
 	nekoRows, nekoErr := database.DB.Query(
 		"SELECT n.id, ie_id, i.name AS ie_name, display_number, photo_s3_object_name, n.name, age, temperament, like_food " +
 			"FROM M_NEKO n " +
@@ -73,9 +82,17 @@ func GetFamilies(c *gin.Context) {
 			"ORDER BY display_number ASC ",
 	)
 	if nekoErr != nil {
+		if nekoErr == sql.ErrNoRows {
+			c.JSON(
+				http.StatusNotFound,
+				gin.H{"ねこ情報の取得に失敗しました。": nekoErr},
+			)
+		}
+
+		/** その他のエラー */
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{"error": nekoErr.Error()},
+			gin.H{"ねこ情報取得時に予期せぬエラーが生じました。": nekoErr.Error()},
 		)
 	}
 	defer nekoRows.Close()
@@ -83,29 +100,8 @@ func GetFamilies(c *gin.Context) {
 	// presenterRowsをループして、情報を記録
 	var presenterProfiles []models.PresenterProfile
 	for presenterRows.Next() {
-		var p models.PresenterProfile
-		if err := presenterRows.Scan(
-			&p.KaedeFlag,
-			&p.IeId,
-			&p.IeName,
-			&p.PhotoS3ObjectName,
-			&p.LastName,
-			&p.FirstName,
-			&p.LastNameKana,
-			&p.FirstNameKana,
-			&p.BirthDate,
-			&p.BirthPlace,
-			&p.Job,
-			&p.Hobby,
-			&p.Ramen,
-			&p.NickName,
-			&p.LikeBy,
-		); err != nil {
-			c.JSON(
-				http.StatusInternalServerError,
-				gin.H{"error": err.Error()},
-			)
-		}
+		p := util.MapToPresenterProfile(presenterRows)
+
 		// S3アクセス用URLを取得・格納
 		p.PhotoUrl = util.GetS3AccessUrl(p.PhotoS3ObjectName)
 
@@ -115,30 +111,7 @@ func GetFamilies(c *gin.Context) {
 	// participantRowsをループして、情報をadd
 	var participantProfiles []models.ParticipantProfile
 	for participantRows.Next() {
-		var p models.ParticipantProfile
-		if err := participantRows.Scan(
-			&p.Id,
-			&p.IeId,
-			&p.IeName,
-			&p.DisplayNumber,
-			&p.PhotoS3ObjectName,
-			&p.LastName,
-			&p.FirstName,
-			&p.LastNameKana,
-			&p.FirstNameKana,
-			&p.BirthDate,
-			&p.BirthPlace,
-			&p.Job,
-			&p.Hobby,
-			&p.Relation,
-			&p.LikeFood,
-			&p.Message,
-		); err != nil {
-			c.JSON(
-				http.StatusInternalServerError,
-				gin.H{"error": err.Error()},
-			)
-		}
+		p := util.MapToParticipantProfile(participantRows)
 
 		//s3アクセス用URLを取得・格納
 		p.PhotoUrl = util.GetS3AccessUrl(p.PhotoS3ObjectName)
@@ -149,24 +122,9 @@ func GetFamilies(c *gin.Context) {
 	// nekoRowsをループして、情報をadd
 	var nekoProfiles []models.Neko
 	for nekoRows.Next() {
-		var p models.Neko
-		if err := nekoRows.Scan(
-			&p.Id,
-			&p.IeId,
-			&p.IeName,
-			&p.DisplayNumber,
-			&p.PhotoS3ObjectName,
-			&p.Name,
-			&p.Age,
-			&p.Temperament,
-			&p.LikeFood,
-		); err != nil {
-			c.JSON(
-				http.StatusInternalServerError,
-				gin.H{"error": err.Error()},
-			)
-		}
+		p := util.MapToNekoProfile(nekoRows)
 
+		//s3アクセス用URLを取得・格納
 		p.PhotoUrl = util.GetS3AccessUrl(p.PhotoS3ObjectName)
 
 		nekoProfiles = append(nekoProfiles, p)

@@ -46,14 +46,14 @@ func GetAccessPage(c *gin.Context) {
 		if accessInfoErr == sql.ErrNoRows {
 			c.JSON(
 				http.StatusNotFound,
-				gin.H{"error": accessInfoErr.Error()},
+				gin.H{"アクセス情報の取得に失敗しました。": accessInfoErr.Error()},
 			)
 			return
 		}
 		//** その他のエラーの場合 */
 		c.JSON(
 			http.StatusInternalServerError,
-			gin.H{"error": accessInfoErr.Error()},
+			gin.H{"アクセス情報取得時に予期せぬエラーが生じました。": accessInfoErr.Error()},
 		)
 		return
 	}

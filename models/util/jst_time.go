@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+/** 時刻関係共通メソッド*/
 type JSTTime struct {
 	time.Time
 }
