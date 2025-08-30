@@ -45,7 +45,7 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// ルーティング
-	r.GET("/", controllers.GetTopPage)
+	r.GET("/top", controllers.GetTopPage)
 	r.GET("/families", controllers.GetFamilies)
 	r.GET("/access", controllers.GetAccessPage)
 	r.GET("/gallery", controllers.GetGalleryPhotos)

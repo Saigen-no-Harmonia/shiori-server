@@ -18,38 +18,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/": {
-            "get": {
-                "description": "トップ画像と挨拶文を取得。挨拶文は念のため配列だが、要素は１つしか返さない想定。",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "top"
-                ],
-                "summary": "トップページ取得",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/resource.TopPageResource"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/access": {
             "get": {
                 "description": "アクセス情報を返却。",
@@ -170,6 +138,38 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/top": {
+            "get": {
+                "description": "トップ画像と挨拶文を取得。",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "top"
+                ],
+                "summary": "トップページ取得",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/resource.TopPageResource"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -177,6 +177,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "gatheringDate": {
+                    "description": "GatheringDate      util.JSTTime ` + "`" + `json:\"gatheringDate\" example:\"2000-01-31T00:00:00+09:00\"` + "`" + `",
                     "type": "string",
                     "example": "2000-01-31T00:00:00+09:00"
                 },
@@ -201,6 +202,7 @@ const docTemplate = `{
                     "example": "https://oisiiRestaurant.com"
                 },
                 "startingDate": {
+                    "description": "StartingDate       util.JSTTime ` + "`" + `json:\"startingDate\" example:\"2000-01-31T00:15:00+09:00\"` + "`" + `",
                     "type": "string",
                     "example": "2000-01-31T00:15:00+09:00"
                 },

@@ -14,13 +14,13 @@ import (
 
 // GetTopPage トップページ情報の取得
 // @Summary トップページ取得
-// @Description トップ画像と挨拶文を取得。挨拶文は念のため配列だが、要素は１つしか返さない想定。
+// @Description トップ画像と挨拶文を取得。
 // @Tags top
 // @Accept json
 // @Produce json
 // @Success 200 {object} resource.TopPageResource
 // @Failure 500 {object} map[string]string
-// @Router / [get]
+// @Router /top [get]
 func GetTopPage(c *gin.Context) {
 	/** トップ画像をDBから取得（レコードは一件のみ） */
 	photoRow := database.DB.QueryRow(

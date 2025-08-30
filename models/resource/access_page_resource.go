@@ -14,8 +14,10 @@ type AccessPageResource struct {
 	GatheringSpot      string       `json:"gatheringSpot" example:"松戸新田駅の近くのいなげや"`
 	GatheringDate      util.JSTTime `json:"gatheringDate" example:"2000-01-31T00:00:00+09:00"`
 	StartingDate       util.JSTTime `json:"startingDate" example:"2000-01-31T00:15:00+09:00"`
-	RestaurantName     string       `json:"restaurantName" example:"oisiiRestaurant"`
-	RestaurantUrl      string       `json:"restaurantUrl" example:"https://oisiiRestaurant.com"`
+	// GatheringDate time.Time `json:"gatheringDate" example:"2000-01-31T00:00:00+09:00"`
+	// StartingDate   time.Time `json:"startingDate" example:"2000-01-31T00:15:00+09:00"`
+	RestaurantName string `json:"restaurantName" example:"oisiiRestaurant"`
+	RestaurantUrl  string `json:"restaurantUrl" example:"https://oisiiRestaurant.com"`
 }
 
 // コンストラクタ

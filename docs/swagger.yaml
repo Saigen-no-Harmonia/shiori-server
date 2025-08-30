@@ -3,6 +3,7 @@ definitions:
   resource.AccessPageResource:
     properties:
       gatheringDate:
+        description: GatheringDate      util.JSTTime `json:"gatheringDate" example:"2000-01-31T00:00:00+09:00"`
         example: "2000-01-31T00:00:00+09:00"
         type: string
       gatheringSpot:
@@ -21,6 +22,7 @@ definitions:
         example: https://oisiiRestaurant.com
         type: string
       startingDate:
+        description: StartingDate       util.JSTTime `json:"startingDate" example:"2000-01-31T00:15:00+09:00"`
         example: "2000-01-31T00:15:00+09:00"
         type: string
       venueAccessPageUrl:
@@ -210,27 +212,6 @@ info:
   title: Shiori API
   version: "1.0"
 paths:
-  /:
-    get:
-      consumes:
-      - application/json
-      description: トップ画像と挨拶文を取得。挨拶文は念のため配列だが、要素は１つしか返さない想定。
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/resource.TopPageResource'
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: トップページ取得
-      tags:
-      - top
   /access:
     get:
       consumes:
@@ -311,4 +292,25 @@ paths:
       summary: ギャラリー画像取得
       tags:
       - gallery
+  /top:
+    get:
+      consumes:
+      - application/json
+      description: トップ画像と挨拶文を取得。
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/resource.TopPageResource'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: トップページ取得
+      tags:
+      - top
 swagger: "2.0"
