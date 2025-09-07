@@ -31,8 +31,15 @@ func NewGalleryHandler(s service.GalleryService) *GalleryHandler {
 // @Failure 500 {object} map[string]string
 // @Router /gallery [get]
 func (h *GalleryHandler) GetGalleryPhotos(c *gin.Context) {
-	limitStr := c.DefaultQuery("limit", "20")
-	offsetStr := c.DefaultQuery("offset", "0")
+	limitStr := c.Query("limit")
+	offsetStr := c.Query("offset")
+
+	if limitStr == "" {
+		limitStr = "20"
+	}
+	if offsetStr == "" {
+		offsetStr = "0"
+	}
 
 	// パラメータをint型に変換
 	limit, offset, err := parseParamToInt(limitStr, offsetStr)

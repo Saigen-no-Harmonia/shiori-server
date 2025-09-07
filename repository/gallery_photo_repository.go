@@ -34,7 +34,7 @@ func (r *galleryPhotoRepository) SelectByRange(limit int, offset int) ([]model.G
 	defer rows.Close()
 
 	// 取得したデータをモデルに格納
-	var galleryPhotos []model.GalleryPhoto
+	galleryPhotos := []model.GalleryPhoto{}
 	for rows.Next() {
 		var p model.GalleryPhoto
 		if err := rows.Scan(
