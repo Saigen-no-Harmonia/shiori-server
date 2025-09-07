@@ -2,13 +2,13 @@ package util
 
 import (
 	"database/sql"
-	"shiori-server/models"
+	"shiori-server/model"
 )
 
 /** DBから取得したデータをmodelにマッピングする */
 
-func MapToNekoProfile(nekoRow *sql.Rows) models.Neko {
-	var p models.Neko
+func MapToNekoProfile(nekoRow *sql.Rows) model.Neko {
+	var p model.Neko
 	if err := nekoRow.Scan(
 		&p.Id,
 		&p.IeId,
@@ -27,8 +27,8 @@ func MapToNekoProfile(nekoRow *sql.Rows) models.Neko {
 	return p
 }
 
-func MapToParticipantProfile(participantRow *sql.Rows) models.ParticipantProfile {
-	var p models.ParticipantProfile
+func MapToParticipantProfile(participantRow *sql.Rows) model.ParticipantProfile {
+	var p model.ParticipantProfile
 	if err := participantRow.Scan(
 		&p.Id,
 		&p.IeId,
@@ -53,8 +53,8 @@ func MapToParticipantProfile(participantRow *sql.Rows) models.ParticipantProfile
 	return p
 }
 
-func MapToPresenterProfile(presenterRow *sql.Rows) models.PresenterProfile {
-	var p models.PresenterProfile
+func MapToPresenterProfile(presenterRow *sql.Rows) model.PresenterProfile {
+	var p model.PresenterProfile
 	if err := presenterRow.Scan(
 		&p.KaedeFlag,
 		&p.IeId,
@@ -76,27 +76,4 @@ func MapToPresenterProfile(presenterRow *sql.Rows) models.PresenterProfile {
 	}
 
 	return p
-}
-
-func MapToAccessInfo(accessRow *sql.Row) (models.AccessInfo, error) {
-
-	var accessInfo models.AccessInfo
-	if accessInfoErr := accessRow.Scan(
-		&accessInfo.VenueId,
-		&accessInfo.VenueName,
-		&accessInfo.VenueAddress,
-		&accessInfo.VenueAccessPageUrl,
-		&accessInfo.Latitude,
-		&accessInfo.Longitude,
-		&accessInfo.GatheringSpot,
-		&accessInfo.GatheringDate,
-		&accessInfo.StartingDate,
-		&accessInfo.RestaurantName,
-		&accessInfo.RestaurantUrl,
-	); accessInfoErr != nil {
-		return accessInfo, accessInfoErr
-	}
-
-	return accessInfo, nil
-
 }

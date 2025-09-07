@@ -9,14 +9,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
-// GetS3AccessUrl returns a presigned URL for the given object key.
+// GetS3AccessUrl S3画像にアクセスする署名付きURLを発行する
 func GetS3AccessUrl(s3ObjectKey string) string {
 	ctx := context.TODO()
 
 	resp, err := Presigner.PresignGetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(GetS3BucketName()),
 		Key:    aws.String(s3ObjectKey),
-	}, s3.WithPresignExpires(15*time.Minute))
+	}, s3.WithPresignExpires(7*24*time.Hour))
 
 	if err != nil {
 		log.Fatalf("unable to get presigned URL, %v", err)
