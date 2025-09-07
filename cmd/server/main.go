@@ -26,7 +26,7 @@ func main() {
 
 	// .envファイルの読み込み
 	log.Println("===== Starting load dotenv =====")
-	err := godotenv.Load(".env")
+	err := godotenv.Load()
 	if err != nil {
 		log.Fatal(".envファイルの読み込みに失敗しました")
 	}
